@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "target": "es2019",
+    "module": "CommonJS",
     "moduleResolution": "node",
 		"noImplicitReturns": true,
 		"noUnusedLocals": true,
