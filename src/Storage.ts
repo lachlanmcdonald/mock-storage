@@ -3,9 +3,10 @@
  * it accepts all types for the keys, but unlike a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), will silenty call `toString()` on the value
  * and use that result as the key.
  */
+// eslint-disable-next-line func-style
 export function convert(key: any): string {
 	if (key === null) {
-		return "null";
+		return 'null';
 	} else if (typeof key === 'undefined') {
 		return 'undefined';
 	} else {
@@ -16,10 +17,8 @@ export function convert(key: any): string {
 /**
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
  * namely used for [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
- *
- * **Note:** This class is intended solely for tests. Do not use in production.
  */
-export class MockStorage {
+export class Storage {
 	store: Record<string, any>;
 
 	constructor() {
@@ -50,6 +49,7 @@ export class MockStorage {
 
 	key(index: number) {
 		const keys = Object.keys(this.store);
+
 		return keys[index] || null;
 	}
 

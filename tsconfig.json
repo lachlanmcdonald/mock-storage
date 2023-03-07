@@ -1,6 +1,14 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
+    "target": "es2019",
+    "moduleResolution": "node",
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
 		"noImplicitAny": true,
-		"esModuleInterop": true,
+		"sourceMap": false,
+    "esModuleInterop": true,
+		"lib": [
+			"es2019",
+		]
 	}
 }
