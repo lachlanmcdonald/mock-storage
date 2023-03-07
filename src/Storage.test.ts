@@ -1,7 +1,7 @@
 import {describe, expect, test} from '@jest/globals';
-import { convert, Storage } from './Storage';
+import Storage from './Storage';
 
-const CONVERT_TESTS: Array<Array<any>> = [
+const Conversion: Array<Array<any>> = [
 	['"test"', 'test', 'test'],
 	['123', 123, '123'],
 	['123.059', 123.059, '123.059'],
@@ -14,12 +14,6 @@ const CONVERT_TESTS: Array<Array<any>> = [
 	['an array', [1, 2, 3], '1,2,3'],
 	['a function', () => {}, /^\s*\(\)\s*=>\s*\{\s*\}\s*$/u], // eslint-disable-line no-empty-function, @typescript-eslint/no-empty-function
 ];
-
-describe('convert()', () => {
-	test.each(CONVERT_TESTS)('%s returns a string', (_message, input) => {
-		expect(typeof convert(input)).toBe('string');
-	});
-});
 
 describe('new Storage()', () => {
 	test('Empty store on initialisation', () => {
@@ -56,7 +50,7 @@ describe('.getItem()', () => {
 		expect(k.getItem('test')).toBe(null);
 	});
 
-	test.each(CONVERT_TESTS)('Converts %s to a string before retrieving', (_message, key) => {
+	test.each(Conversion)('Converts %s to a string before retrieving', (_message, key) => {
 		const k = new Storage();
 
 		k.setItem(key, 'test');
@@ -65,7 +59,7 @@ describe('.getItem()', () => {
 });
 
 describe('.setItem()', () => {
-	test.each(CONVERT_TESTS)('Converts %s to a string before setting', (_message, input, expected) => {
+	test.each(Conversion)('Converts %s to a string before setting', (_message, input, expected) => {
 		const k = new Storage();
 
 		k.setItem('test', input);

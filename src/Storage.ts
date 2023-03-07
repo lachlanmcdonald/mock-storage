@@ -1,24 +1,8 @@
 /**
- * A quirk of [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) is that
- * it accepts all types for the keys, but unlike a [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map), will silenty call `toString()` on the value
- * and use that result as the key.
- */
-// eslint-disable-next-line func-style
-export function convert(key: any): string {
-	if (key === null) {
-		return 'null';
-	} else if (typeof key === 'undefined') {
-		return 'undefined';
-	} else {
-		return key.toString();
-	}
-}
-
-/**
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
  * namely used for [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
  */
-export class Storage {
+export default class Storage {
 	store: Record<string, any>;
 
 	constructor() {
@@ -30,7 +14,7 @@ export class Storage {
 	}
 
 	getItem(key: any) {
-		key = convert(key);
+		key = String(key);
 
 		if (this.store.hasOwnProperty(key)) {
 			return this.store[key];
@@ -40,7 +24,7 @@ export class Storage {
 	}
 
 	setItem(key: any, value: any) {
-		this.store[convert(key)] = convert(value);
+		this.store[String(key)] = String(value);
 	}
 
 	removeItem(key: string) {
