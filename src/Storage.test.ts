@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2023 Lachlan McDonald. All rights reserved.
+ * This file is licensed under the MIT License
+ * https://github.com/lachlanmcdonald/mock-storage
+ */
 import {describe, expect, test} from '@jest/globals';
 import Storage from './Storage';
 
