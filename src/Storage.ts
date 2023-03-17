@@ -12,7 +12,7 @@
  * __Implementation notes:__
  * - This implementation is intended for non-browser environments, and as such, does not fire `storage` events.
  */
-export default class Storage {
+export class Storage {
 	store: Record<string, any>;
 
 	/**
@@ -54,7 +54,10 @@ export default class Storage {
 		this.store[String(key)] = String(value);
 	}
 
-	removeItem(key: string) {
+	/**
+	 * Removes the provided `key` from the Storage object, if it exists.
+	 */
+	removeItem(key: any) {
 		delete this.store[key];
 	}
 

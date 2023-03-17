@@ -4,7 +4,7 @@
  * https://github.com/lachlanmcdonald/mock-storage
  */
 import {describe, expect, test} from '@jest/globals';
-import Storage from './Storage';
+import {Storage} from './Storage';
 
 const Conversion: Array<Array<any>> = [
 	['"test"', 'test', 'test'],
