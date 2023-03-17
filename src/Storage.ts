@@ -13,31 +13,35 @@
  * - This implementation is intended for non-browser environments, and as such, does not fire `storage` events.
  */
 export class Storage {
-	store: Record<string, any>;
+	__unsafeInternalStore: Record<string, any>;
 
 	/**
 	 * Intialises a new instance of __Storage__. In most cases, the __createStorage()__ factory should
 	 * be used instead when intialising new instances of Storage to ensure the internals are properly proxied.
 	 */
 	constructor() {
-		this.store = {};
+		this.__unsafeInternalStore = {};
 	}
 
 	/**
 	 * Removes all data stored in the Storage object.
 	 */
 	clear() {
-		this.store = {};
+		this.__unsafeInternalStore = {};
 	}
 
 	/**
 	 * Retrieves the value for provided `key` from the Storage object, or `null` if the key does not exist.
 	 */
 	getItem(key: any) {
+		if (arguments.length === 0) {
+			throw new TypeError("Failed to execute 'getItem' on 'Storage': 1 argument required, but only 0 present.");
+		}
+
 		key = String(key);
 
-		if (this.store.hasOwnProperty(key)) {
-			return this.store[key];
+		if (this.__unsafeInternalStore.hasOwnProperty(key)) {
+			return this.__unsafeInternalStore[key];
 		} else {
 			return null;
 		}
@@ -51,14 +55,22 @@ export class Storage {
 	 *   throw an exception for exceeding the storage limit.
 	 */
 	setItem(key: any, value: any) {
-		this.store[String(key)] = String(value);
+		if (arguments.length < 2) {
+			throw new TypeError("Failed to execute 'setItem' on 'Storage': 2 arguments required, but only 1 present.");
+		}
+
+		this.__unsafeInternalStore[String(key)] = String(value);
 	}
 
 	/**
 	 * Removes the provided `key` from the Storage object, if it exists.
 	 */
 	removeItem(key: any) {
-		delete this.store[key];
+		if (arguments.length === 0) {
+			throw new TypeError("Failed to execute 'removeItem' on 'Storage': 1 argument required, but only 0 present.");
+		}
+
+		delete this.__unsafeInternalStore[String(key)];
 	}
 
 	/**
@@ -69,12 +81,20 @@ export class Storage {
 	 * - The handling of non-numeric keys is indeterminate.
 	 */
 	key(index: any) {
+		if (arguments.length === 0) {
+			throw new TypeError("Failed to execute 'key' on 'Storage': 1 argument required, but only 0 present.");
+		}
+
+		const keys = Object.keys(this.__unsafeInternalStore);
 
 		return keys[index] || null;
 	}
 
+	/**
+	 * Returns the number of items stored in the Storage object
+	 */
 	get length() {
-		return Object.keys(this.store).length;
+		return Object.keys(this.__unsafeInternalStore).length;
 	}
 
 	toString() {

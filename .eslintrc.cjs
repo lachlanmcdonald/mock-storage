@@ -11,5 +11,11 @@ module.exports = {
 	],
 	rules: {
 		'@typescript-eslint/no-explicit-any': 'off',
+		'no-underscore-dangle': [
+			'warn',
+			{
+				allow: ['__unsafeInternalStore'],
+			},
+		],
 	},
 };
