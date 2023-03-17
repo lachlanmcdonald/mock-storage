@@ -40,7 +40,7 @@ export class Storage {
 
 		key = String(key);
 
-		if (this.__unsafeInternalStore.hasOwnProperty(key)) {
+		if (Object.hasOwnProperty.call(this.__unsafeInternalStore, key)) {
 			return this.__unsafeInternalStore[key];
 		} else {
 			return null;
@@ -110,8 +110,20 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 	ownKeys(target: Storage) {
 		return Object.keys(target.__unsafeInternalStore);
 	},
-	get(target: Storage, property: any) {
-		return target.getItem(property);
+	get(target: Storage, property: any, receiver: any) {
+		if (Reflect.has(target, property)) {
+			const value = Reflect.get(target, property, receiver);
+
+			if (typeof value === 'function') {
+				return function () {
+					return value.apply(this, arguments); // eslint-disable-line prefer-rest-params
+				}.bind(target);
+			} else {
+				return value;
+			}
+		} else {
+			return target.getItem(property);
+		}
 	},
 	set(target: Storage, property: any, value: any) {
 		try {
@@ -125,14 +137,18 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 		return false;
 	},
 	has(target: Storage, property: any) {
-		return typeof target.getItem(property) === 'string';
+		if (Reflect.has(target, property)) {
+			return true;
+		} else {
+			return typeof target.getItem(property) === 'string';
+		}
 	},
 	deleteProperty(target: Storage, property: any) {
 		target.removeItem(property);
 		return true;
 	},
-	getOwnPropertyDescriptor(target, property): PropertyDescriptor | undefined {
-		if (property !== '__unsafeInternalStore' && target.__unsafeInternalStore.hasOwnProperty(property)) {
+	getOwnPropertyDescriptor(target: Storage, property: any): PropertyDescriptor | undefined {
+		if (property !== '__unsafeInternalStore' && Reflect.has(target.__unsafeInternalStore, property)) {
 			return {
 				configurable: true,
 				enumerable: true,
@@ -158,5 +174,5 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 };
 
 export const createStorage = () => {
-	return new Proxy(new Storage(), storageProxyHandler);
+	return new Proxy(new Storage(), storageProxyHandler) as Storage & Record<any, any>;
 };

@@ -3,8 +3,8 @@
  * This file is licensed under the MIT License
  * https://github.com/lachlanmcdonald/mock-storage
  */
-import {describe, expect, test} from '@jest/globals';
-import {Storage} from './Storage';
+import {describe, beforeEach, expect, test} from '@jest/globals';
+import { Storage, createStorage } from './Storage';
 
 const Conversion: Array<Array<any>> = [
 	['"test"', 'test', 'test'],
@@ -20,94 +20,85 @@ const Conversion: Array<Array<any>> = [
 	['a function', () => {}, /^\s*\(\)\s*=>\s*\{\s*\}\s*$/u], // eslint-disable-line no-empty-function, @typescript-eslint/no-empty-function
 ];
 
-describe('new Storage()', () => {
-	test('Empty store on initialisation', () => {
-		const k = new Storage();
+describe.each([
+	['createStorage()', 0],
+	['new Storage()', 1],
+])('%s', (_message, type) => {
+	let storageObject: Storage;
 
-		expect(k.length).toBe(0);
-	});
-});
-
-describe('.toString()', () => {
-	test('toString() returns "[object Storage]"', () => {
-		const k = new Storage();
-
-		expect(k.toString()).toBe('[object Storage]');
-	});
-});
-
-describe('.clear()', () => {
-	test('clear() removes any items in storage', () => {
-		const k = new Storage();
-
-		expect(k.length).toBe(0);
-		k.setItem('test', 123);
-		expect(k.length).toBe(1);
-		k.clear();
-		expect(k.length).toBe(0);
-	});
-});
-
-describe('.getItem()', () => {
-	test('Returns "null" for non-existent key', () => {
-		const k = new Storage();
-
-		expect(k.getItem('test')).toBe(null);
-	});
-
-	test.each(Conversion)('Converts %s to a string before retrieving', (_message, key) => {
-		const k = new Storage();
-
-		k.setItem(key, 'test');
-		expect(k.getItem(key)).toBe('test');
-	});
-});
-
-describe('.setItem()', () => {
-	test.each(Conversion)('Converts %s to a string before setting', (_message, input, expected) => {
-		const k = new Storage();
-
-		k.setItem('test', input);
-
-		if (expected instanceof RegExp) {
-			expect(k.getItem('test')).toMatch(expected);
-		} else {
-			expect(k.getItem('test')).toBe(expected);
+	beforeEach(() => {
+		if (type === 0) {
+			storageObject = createStorage();
+		} else if (type === 1) {
+			storageObject = new Storage();
 		}
 	});
-});
 
-describe('.length', () => {
-	test('Returns a length of zero for empty storage', () => {
-		const k = new Storage();
-
-		expect(k.length).toBe(0);
+	test('Empty store on initialisation', () => {
+		expect(storageObject.length).toBe(0);
 	});
 
-	test('Returns a length of 1 when an item is set', () => {
-		const k = new Storage();
-
-		k.setItem('test', 123);
-		expect(k.length).toBe(1);
-	});
-});
-
-describe('.removeItem()', () => {
-	test('Returns the previous lngth when an item is set then removed', () => {
-		const k = new Storage();
-
-		k.setItem('a', 123);
-		const length = k.length;
-
-		k.setItem('b', 123);
-		k.removeItem('b');
-		expect(k.length).toBe(length);
+	test('.toString() returns "[object Storage]"', () => {
+		expect(storageObject.toString()).toBe('[object Storage]');
 	});
 
-	test('Returns a length of zero removing an non-existent item', () => {
-		const k = new Storage();
+	describe('.clear()', () => {
+		test('clear() removes all items from storage', () => {
+			expect(storageObject.length).toBe(0);
+			storageObject.setItem('test', 123);
+			expect(storageObject.length).toBe(1);
+			storageObject.clear();
+			expect(storageObject.length).toBe(0);
+		});
+	});
 
-		k.removeItem('test');
-		expect(k.length).toBe(0);
+	describe('.getItem()', () => {
+		test('Returns "null" for non-existent key', () => {
+			expect(storageObject.getItem('test')).toBe(null);
+		});
+
+		test.each(Conversion)('Converts %s to a string before retrieving', (_message, key) => {
+			storageObject.setItem(key, 'test');
+			expect(storageObject.getItem(key)).toBe('test');
+		});
+	});
+
+	describe('.setItem()', () => {
+		test.each(Conversion)('Converts %s to a string before setting', (_message, input, expected) => {
+			storageObject.setItem('test', input);
+
+			if (expected instanceof RegExp) {
+				expect(storageObject.getItem('test')).toMatch(expected);
+			} else {
+				expect(storageObject.getItem('test')).toBe(expected);
+			}
+		});
+	});
+
+	describe('.length', () => {
+		test('Returns a length of zero for empty storage', () => {
+			expect(storageObject.length).toBe(0);
+		});
+
+		test('Returns a length of 1 when an item is set', () => {
+			storageObject.setItem('test', 123);
+			expect(storageObject.length).toBe(1);
+		});
+	});
+
+	describe('.removeItem()', () => {
+		test('Returns the previous lngth when an item is set then removed', () => {
+			storageObject.setItem('a', 123);
+			const length = storageObject.length;
+
+			storageObject.setItem('b', 123);
+			storageObject.removeItem('b');
+			expect(storageObject.length).toBe(length);
+		});
+
+		test('Returns a length of zero removing an non-existent item', () => {
+			storageObject.removeItem('test');
+			expect(storageObject.length).toBe(0);
+		});
 	});
 });
