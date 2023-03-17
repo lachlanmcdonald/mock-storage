@@ -101,3 +101,62 @@ export class Storage {
 		return '[object Storage]';
 	}
 }
+
+/**
+ * The `storageProxyHandler` provides handler functions/traps for the Storage class,
+ * so that it can be used with JavaScript's internal methods, such as Object.keys().
+ */
+export const storageProxyHandler: ProxyHandler<Storage> = {
+	ownKeys(target: Storage) {
+		return Object.keys(target.__unsafeInternalStore);
+	},
+	get(target: Storage, property: any) {
+		return target.getItem(property);
+	},
+	set(target: Storage, property: any, value: any) {
+		try {
+			target.setItem(property, value);
+			return true;
+		} catch (e) {
+			return false;
+		}
+	},
+	defineProperty() {
+		return false;
+	},
+	has(target: Storage, property: any) {
+		return typeof target.getItem(property) === 'string';
+	},
+	deleteProperty(target: Storage, property: any) {
+		target.removeItem(property);
+		return true;
+	},
+	getOwnPropertyDescriptor(target, property): PropertyDescriptor | undefined {
+		if (property !== '__unsafeInternalStore' && target.__unsafeInternalStore.hasOwnProperty(property)) {
+			return {
+				configurable: true,
+				enumerable: true,
+				value: target.getItem(property),
+				writable: true,
+			};
+		} else {
+			return undefined; // eslint-disable-line no-undefined
+		}
+	},
+	isExtensible() {
+		return true;
+	},
+	preventExtensions() {
+		throw new TypeError('Cannot prevent extensions');
+	},
+	getPrototypeOf() {
+		return Storage;
+	},
+	setPrototypeOf() {
+		return false;
+	},
+};
+
+export const createFactory = () => {
+	return new Proxy(new Storage(), storageProxyHandler);
+};
