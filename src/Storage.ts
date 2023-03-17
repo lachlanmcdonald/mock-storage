@@ -157,6 +157,6 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 	},
 };
 
-export const createFactory = () => {
+export const createStorage = () => {
 	return new Proxy(new Storage(), storageProxyHandler);
 };
