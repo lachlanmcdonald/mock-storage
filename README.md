@@ -2,7 +2,7 @@
 
 __mock-storage__ is a implementation of [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API), primarily intended for use in testing/developing code in non-browser environments (where that API is not available, i.e. [localStorage])
 
-__mock-storage__ intends to be side-effect compatible with browser environments, with support for utilising internal methods on the Web Storage instances.
+__mock-storage__ intends to be side-effect compatible with browser environments, with support for utilising internal methods on the Web Storage instances. This allows __mock-storage__ to be used in environments where you may not have complete control or visibility over what or how your storage is being accessed.
 
 ## Usage
 
@@ -17,23 +17,23 @@ const storage = new Storage();
 
 `createStorage()` will return a new __Storage__ instance, that is proxied in such a way as to be as close as browser implementations as possible. This instance supports both the [Storage Interface][storage_interface] and JavaScript's internal methods.
 
-For instance:
+Whilst the [Storage Interface][storage_interface] is the preferred method for utilising Storage instances, interacting with a Storage instance through the means below, whilst unconventional and not recommended, is not disallowed.
 
-- `Object.keys()` returns all keys set on the instance.
-- `Object.entries()` returns an array of key/value pairs set on the instance.
-- `Object.values()` retuns an array of values set on the instance.
-- `instance[key]` behaves the same as `getItem()` except for existing methods or properties.
-- `instance[key] = value` behaves the same as `setItem()`
-- `delete instance[key]` behaves the same as `removeItem()`
-- `Object.defineProperty()` and `Object.defineProperties()` behaves the same as `setItem()`
-- `{...instance}` will output an object of key/value pairs set on the instance
-- `Object.preventExtensions()` will throw a TypeError.
-- `Object.setPrototypeOf()` will always fail and return `false`.
-- `Object.isExtensible()` is always `true`.
-- `Object.getOwnPropertyNames()` returns all keys set on the instance.
-- `instance['length']` will return the number of keys set on the instance, even if a key of `length` has been set on the instance.
-
-> Whilst the [Storage Interface][storage_interface] is the preferred method for utilising Storage instances, accessing a Storage instance through other means is unconventional and not recommended, but not disallowed.
+| Method | Behaviour |
+| ----- | ----- |
+| `Object.keys()` | Returns all keys set on the instance | 
+| `Object.entries()` | Returns an array of key/value pairs set on the instance | 
+| `Object.values()` | Retuns an array of values set on the instance | 
+| `instance[key]` | Behaves the same as `getItem()` except for existing methods or properties | 
+| `instance[key] = value` | Behaves the same as `setItem()` | 
+| `delete instance[key]` | Behaves the same as `removeItem()` | 
+| `Object.defineProperty()` <br> `Object.defineProperties()` | Behaves the same as `setItem()` | 
+| `{...instance}` | Outputs an object of key/value pairs set on the instance | 
+| `Object.preventExtensions()` | Will throw a TypeError. | 
+| `Object.setPrototypeOf()` | Will fail and return `false`. | 
+| `Object.isExtensible()` | Will always return `true`. | 
+| `Object.getOwnPropertyNames()` | Returns all keys set on the instance. | 
+| `instance['length']` | Will return the number of keys set on the instance, even if a key of `length` has been added to the storage. | 
 
 ### new Storage()
 
@@ -44,6 +44,7 @@ For instance:
 - `Storage.setItem()`
 - `Storage.removeItem()`
 - `Storage.clear()`
+- `Storage.length`
 
  ## Implementation notes
 
