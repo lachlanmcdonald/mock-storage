@@ -8,9 +8,6 @@
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
  * namely used for testing against [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) in
  * environments where it does not exist.
- *
- * __Implementation notes:__
- * - This implementation is intended for non-browser environments, and as such, does not fire `storage` events.
  */
 export class Storage {
 	__unsafeInternalStore: Record<string, any>;
@@ -133,8 +130,12 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 			return false;
 		}
 	},
-	defineProperty() {
-		return false;
+	defineProperty(target, property, descriptor) {
+		if (typeof descriptor.get === 'function' || typeof descriptor.set === 'function') {
+			throw new TypeError("Failed to set a named property on 'Storage': Accessor properties are not allowed.");
+		}
+		target.setItem(property, descriptor.value);
+		return true;
 	},
 	has(target: Storage, property: any) {
 		if (Reflect.has(target, property)) {
@@ -173,6 +174,8 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 	},
 };
 
+export type ProxiedStorage = Storage & Record<any, unknown>;
+
 export const createStorage = () => {
-	return new Proxy(new Storage(), storageProxyHandler) as Storage & Record<any, any>;
+	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage;
 };

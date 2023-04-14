@@ -20,16 +20,18 @@ const Conversion = [
     ['an array', [1, 2, 3], '1,2,3'],
     ['a function', () => { }, /^\s*\(\)\s*=>\s*\{\s*\}\s*$/u], // eslint-disable-line no-empty-function, @typescript-eslint/no-empty-function
 ];
+const CREATES_STORAGE = Symbol();
+const NEW_STORAGE = Symbol();
 globals_1.describe.each([
-    ['createStorage()', 0],
-    ['new Storage()', 1],
+    ['createStorage()', CREATES_STORAGE],
+    ['new Storage()', NEW_STORAGE],
 ])('%s', (_message, type) => {
     let storageObject;
     (0, globals_1.beforeEach)(() => {
-        if (type === 0) {
+        if (type === CREATES_STORAGE) {
             storageObject = (0, Storage_1.createStorage)();
         }
-        else if (type === 1) {
+        else if (type === NEW_STORAGE) {
             storageObject = new Storage_1.Storage();
         }
     });
@@ -76,6 +78,11 @@ globals_1.describe.each([
             storageObject.setItem('test', 123);
             (0, globals_1.expect)(storageObject.length).toBe(1);
         });
+        (0, globals_1.test)('Returns correct length when a key of "length" is set with setItem', () => {
+            (0, globals_1.expect)(storageObject.length).toBe(0);
+            storageObject.setItem('length', 100);
+            (0, globals_1.expect)(storageObject.length).toBe(1);
+        });
     });
     (0, globals_1.describe)('.removeItem()', () => {
         (0, globals_1.test)('Returns the previous lngth when an item is set then removed', () => {
@@ -88,6 +95,19 @@ globals_1.describe.each([
         (0, globals_1.test)('Returns a length of zero removing an non-existent item', () => {
             storageObject.removeItem('test');
             (0, globals_1.expect)(storageObject.length).toBe(0);
+        });
+    });
+});
+(0, globals_1.describe)('createStorage()', () => {
+    (0, globals_1.describe)('.length', () => {
+        (0, globals_1.test)('Returns correct length when a key of "length" is set with defineProperty', () => {
+            const storageObject = (0, Storage_1.createStorage)();
+            (0, globals_1.expect)(storageObject.length).toBe(0);
+            Object.defineProperty(storageObject, 'length', {
+                value: 100,
+                writable: true,
+            });
+            (0, globals_1.expect)(storageObject.length).toBe(1);
         });
     });
 });
