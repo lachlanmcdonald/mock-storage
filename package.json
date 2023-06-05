@@ -1,5 +1,5 @@
 {
-  "name": "mock-storage",
+  "name": "@lachlanmcdonald/mock-storage",
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
@@ -13,6 +13,7 @@
     "url": "https://github.com/lachlanmcdonald"
   },
   "license": "MIT",
+  "description": "An implementation of the Web Storage API intended for use in development/testing in non-browser environments.",
   "devDependencies": {
     "@jest/globals": "^29.5.0",
     "@lachlanmcdonald/eslint-config-eslint": "^0.4.2",
