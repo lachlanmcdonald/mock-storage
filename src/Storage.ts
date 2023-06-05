@@ -13,8 +13,8 @@ export class Storage {
 	__unsafeInternalStore: Record<string, any>;
 
 	/**
-	 * Intialises a new instance of __Storage__. In most cases, the __createStorage()__ factory should
-	 * be used instead when intialising new instances of Storage to ensure the internals are properly proxied.
+	 * Initialises a new instance of __Storage__. In most cases, the __createStorage()__ factory should
+	 * be used instead when initialising new instances of Storage to ensure the internals are properly proxied.
 	 */
 	constructor() {
 		this.__unsafeInternalStore = {};
