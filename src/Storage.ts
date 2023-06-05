@@ -6,7 +6,8 @@
 
 /**
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
- * namely used for testing against [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) in
+ * intended for use in development/testing in non-browser environments.
+ * e.g. testing [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) in
  * environments where it does not exist.
  */
 export class Storage {
@@ -113,6 +114,7 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 
 			if (typeof value === 'function') {
 				return function () {
+					// @ts-expect-error Intentional function reflection
 					return value.apply(this, arguments); // eslint-disable-line prefer-rest-params
 				}.bind(target);
 			} else {
@@ -177,5 +179,5 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 export type ProxiedStorage = Storage & Record<any, unknown>;
 
 export const createStorage = () => {
-	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage;
+	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage; // eslint-disable-line no-undef
 };

@@ -59,8 +59,6 @@ Whilst the [Storage Interface][storage-interface] is the preferred method for ut
 
 ## Tests
 
-Tests are run on both JavaScript and TypeScript files using [jest](https://jestjs.io/) and [ts-jest](https://www.npmjs.com/package/ts-jest):
-
 ```
 npm test
 ```
