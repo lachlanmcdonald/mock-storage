@@ -15,7 +15,7 @@ const storage = new Storage();
 
 ### createStorage()
 
-`createStorage()` will return a new __Storage__ instance, that is proxied in such a way as to be as close as browser implementations as possible. This instance supports both the [Storage Interface][storage_interface] and JavaScript's internal methods.
+`createStorage()` will return a new __Storage__ instance that is proxied in such a way as to be as close to browser implementations as possible. This instance supports both the [Storage Interface][storage_interface] and JavaScript's internal methods.
 
 Whilst the [Storage Interface][storage_interface] is the preferred method for utilising Storage instances, interacting with a Storage instance through the means below, whilst unconventional and not recommended, is not disallowed.
 
@@ -37,7 +37,7 @@ Whilst the [Storage Interface][storage_interface] is the preferred method for ut
 
 ### new Storage()
 
-`new Storage();` initialises a new __Storage__ object which is not proxied. As such, this instance only implements the [Storage Interface][storage_interface]:
+`new Storage()` initialises a new __Storage__ object that is not proxied. As such, this instance only implements the [Storage Interface][storage_interface]:
 
 - `Storage.key()`
 - `Storage.getItem()`
@@ -48,8 +48,8 @@ Whilst the [Storage Interface][storage_interface] is the preferred method for ut
 
  ## Implementation notes
 
-- The key `__unsafeInternalStore` on __Storage__ instances is reserved. Manipulate this key outside of using the [Storage Interface][storage_interface] will likely result in errors or unknown behaviour.
-- This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions.
+- The key `__unsafeInternalStore` on __Storage__ instances is reserved. Manipulate this key outside of using the [Storage Interface][storage_interface] will likely result in errors.
+- This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
 - Storage instances do not have a quote limit and will not throw `QuotaExceededError` exeptions.
 - The `configurable`, `enumerable`, `writable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.
 - As there is no trap for `Object.freeze()`, calling `Object.freeze()` will throw the [TypeError] `"Cannot prevent extensions"`, instead of the expected `"Cannot freeze"`.
