@@ -113,8 +113,8 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 
 			if (typeof value === 'function') {
 				return function () {
-					return value.apply(this, arguments); // eslint-disable-line prefer-rest-params
-				}.bind(target);
+					return value.apply(target, arguments); // eslint-disable-line prefer-rest-params
+				};
 			} else {
 				return value;
 			}

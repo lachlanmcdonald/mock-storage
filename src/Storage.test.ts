@@ -3,7 +3,7 @@
  * This file is licensed under the MIT License
  * https://github.com/lachlanmcdonald/mock-storage
  */
-import {describe, beforeEach, expect, test} from '@jest/globals';
+import { describe, beforeEach, expect, test } from '@jest/globals';
 import { Storage, ProxiedStorage, createStorage } from './Storage';
 
 const Conversion: Array<Array<any>> = [
@@ -17,7 +17,7 @@ const Conversion: Array<Array<any>> = [
 	['an object', {}, '[object Object]'],
 	['an empty array', [], ''],
 	['an array', [1, 2, 3], '1,2,3'],
-	['a function', () => {}, /^\s*\(\)\s*=>\s*\{\s*\}\s*$/u], // eslint-disable-line no-empty-function, @typescript-eslint/no-empty-function
+	['a function', () => {}, /^(function\s+\(\)\s*\{\s*\}|\s*\(\)\s*=>\s*\{\s*\}\s)*$/u], // eslint-disable-line no-empty-function, @typescript-eslint/no-empty-function
 ];
 
 const CREATES_STORAGE = Symbol();
@@ -217,7 +217,7 @@ describe('createStorage()', () => {
 	});
 
 	describe('Object.values()', () => {
-		test('Object.values() retuns an array of values.', () => {
+		test('Object.values() returns an array of values.', () => {
 			const values = Object.values(storageObject);
 
 			expect(values).toHaveLength(2);

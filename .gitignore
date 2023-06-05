@@ -11,7 +11,9 @@ node_modules
 *.local
 
 # dist
-dist
+dist/**/*.js
+dist/**/*.ts
+dist/**/*.map
 
 # Editor directories and files
 .vscode/*

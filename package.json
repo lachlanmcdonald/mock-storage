@@ -1,15 +1,26 @@
 {
   "name": "@lachlanmcdonald/mock-storage",
   "version": "0.1.0",
-  "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "dev": "tsc --watch",
-    "build": "tsc",
+    "test": "jest dist/cjs",
+    "build": "npm run build:cjs; npm run build:esm",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
     "lint": "eslint . --ext .ts"
   },
+  "types": "dist/Storage.d.ts",
   "engines": {
     "node": ">=16"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/cjs/Storage.js",
+  "exports": {
+    "require": "./dist/cjs/Storage.js",
+    "import": "./dist/esm/Storage.js"
   },
   "author": {
     "name": "Lachlan McDonald",
