@@ -8,6 +8,9 @@
     "build": "tsc",
     "lint": "eslint . --ext .ts"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "author": {
     "name": "Lachlan McDonald",
     "url": "https://github.com/lachlanmcdonald"
