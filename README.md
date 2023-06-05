@@ -4,7 +4,7 @@
 
 __mock-storage__ is a implementation of [Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API) (e.g. [localStorage]), primarily intended for use in development/testing in non-browser environments where the API is not available.
 
-__mock-storage__ intends to be side-effect compatible with browser environments, with support for utilising internal methods on the Web Storage instances. This allows __mock-storage__ to be used in environments where you may not have complete control or visibility over what or how your storage is being accessed.
+__mock-storage__ intends to be side-effect compatible with browser environments, with support for utilising internal methods on the Web Storage instances. This allows __mock-storage__ to be used in environments where you may not have complete control or visibility over how your storage is being accessed.
 
 ## Usage
 
