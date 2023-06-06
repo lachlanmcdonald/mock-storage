@@ -16,6 +16,11 @@
 		"name": "Lachlan McDonald",
 		"url": "https://github.com/lachlanmcdonald"
 	},
+	"homepage": "https://github.com/lachlanmcdonald/mock-storage",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lachlanmcdonald/mock-storage.git"
+	},
 	"files": [
 		"LICENSE",
 		"README.md",
