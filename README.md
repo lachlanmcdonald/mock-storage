@@ -63,6 +63,7 @@ const storage = new Storage();
 ## Tests
 
 ```
+npm run build
 npm test
 ```
 
