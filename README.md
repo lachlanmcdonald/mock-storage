@@ -1,4 +1,4 @@
-## @lachlanmcdonald/mock-storage
+# @lachlanmcdonald/mock-storage
 
 [![Build](https://github.com/lachlanmcdonald/mock-storage/actions/workflows/build.yml/badge.svg?branch=main)][build-link] [![npm version](https://badge.fury.io/js/%40lachlanmcdonald%2Fmock-storage.svg)][package-link] [![License](https://img.shields.io/badge/License-MIT-blue.svg)][license-link] 
 

@@ -12,6 +12,9 @@
 	"engines": {
 		"node": ">=16"
 	},
+	"bugs": {
+		"url": "https://github.com/lachlanmcdonald/mock-storage/issues"
+	},
 	"author": {
 		"name": "Lachlan McDonald",
 		"url": "https://github.com/lachlanmcdonald"
