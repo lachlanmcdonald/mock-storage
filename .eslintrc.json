@@ -4,7 +4,7 @@
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
-		"@lachlanmcdonald/eslint-config-eslint"
+		"@lmcd/eslint-config"
 	],
 	"plugins": [
 		"@typescript-eslint",
