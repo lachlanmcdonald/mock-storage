@@ -3,7 +3,7 @@
     "target": "ES2017",
     "outDir": "dist",
     "module": "Node16",
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
