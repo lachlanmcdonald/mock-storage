@@ -74,11 +74,9 @@ export class Storage {
 	}
 
 	/**
-	 * Returns the name of the n&#x1D57;&#x02B0; key in the Storage object.
+	 * Returns the name of the nth key in the Storage object.
 	 *
-	 * __Implementation notes:__
 	 * - The order of keys is varies by user-agent and should be not relied upon.
-	 * - The handling of non-numeric keys is indeterminate.
 	 */
 	key(index: any) {
 		if (arguments.length === 0) {
@@ -177,7 +175,7 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 	},
 };
 
-export type ProxiedStorage = Storage & Record<any, unknown>;
+export type ProxiedStorage = Storage & Record<any, any>;
 
 export const createStorage = () => {
 	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage; // eslint-disable-line no-undef
