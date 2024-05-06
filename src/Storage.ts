@@ -4,6 +4,8 @@
  * https://github.com/lachlanmcdonald/mock-storage
  */
 
+const STORAGE_AREA = new WeakMap<any, Map<string, string>>();
+
 /**
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
  * intended for use in development/testing in non-browser environments.
@@ -11,21 +13,19 @@
  * environments where it does not exist.
  */
 export class Storage {
-	__unsafeInternalStore: Record<string, any>;
-
 	/**
 	 * Initialises a new instance of __Storage__. In most cases, the __createStorage()__ factory should
 	 * be used instead when initialising new instances of Storage to ensure the internals are properly proxied.
 	 */
 	constructor() {
-		this.__unsafeInternalStore = {};
+		this.clear();
 	}
 
 	/**
 	 * Removes all data stored in the Storage object.
 	 */
 	clear() {
-		this.__unsafeInternalStore = {};
+		STORAGE_AREA.set(this, new Map());
 	}
 
 	/**
@@ -38,8 +38,10 @@ export class Storage {
 
 		key = String(key);
 
-		if (Object.hasOwnProperty.call(this.__unsafeInternalStore, key)) {
-			return this.__unsafeInternalStore[key];
+		const area = STORAGE_AREA.get(this);
+
+		if (area!.has(key)) {
+			return area!.get(key);
 		} else {
 			return null;
 		}
@@ -57,7 +59,7 @@ export class Storage {
 			throw new TypeError("Failed to execute 'setItem' on 'Storage': 2 arguments required, but only 1 present.");
 		}
 
-		this.__unsafeInternalStore[String(key)] = String(value);
+		STORAGE_AREA.get(this)!.set(String(key), String(value));
 	}
 
 	/**
@@ -68,7 +70,7 @@ export class Storage {
 			throw new TypeError("Failed to execute 'removeItem' on 'Storage': 1 argument required, but only 0 present.");
 		}
 
-		delete this.__unsafeInternalStore[String(key)];
+		STORAGE_AREA.get(this)!.delete(key);
 	}
 
 	/**
@@ -83,16 +85,15 @@ export class Storage {
 			throw new TypeError("Failed to execute 'key' on 'Storage': 1 argument required, but only 0 present.");
 		}
 
-		const keys = Object.keys(this.__unsafeInternalStore);
-
-		return keys[index] || null;
+		const keys = Array.from(STORAGE_AREA.get(this)!.keys());
+		return keys[index] ? STORAGE_AREA.get(this)!.get(keys[index]) : null;
 	}
 
 	/**
 	 * Returns the number of items stored in the Storage object
 	 */
 	get length() {
-		return Object.keys(this.__unsafeInternalStore).length;
+		return STORAGE_AREA.get(this)!.size;
 	}
 
 	toString() {
@@ -101,16 +102,16 @@ export class Storage {
 }
 
 /**
- * The `storageProxyHandler` provides handler functions/traps for the Storage class,
- * so that it can be used with JavaScript's internal methods, such as Object.keys().
+ * The __storageProxyHandler__ provides handler functions/traps for the Storage class,
+ * so that it can be used with JavaScript's internal methods, such as `Object.keys()`.
  */
 export const storageProxyHandler: ProxyHandler<Storage> = {
 	ownKeys(target: Storage) {
-		return Object.keys(target.__unsafeInternalStore);
+		return Array.from(STORAGE_AREA.get(target)!.keys());
 	},
-	get(target: Storage, property: any, receiver: any) {
+	get(target: Storage, property: any) {
 		if (Reflect.has(target, property)) {
-			const value = Reflect.get(target, property, receiver);
+			const value: any = Reflect.get(target, property, target);
 
 			if (typeof value === 'function') {
 				return function () {
@@ -151,11 +152,11 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 		return true;
 	},
 	getOwnPropertyDescriptor(target: Storage, property: any): PropertyDescriptor | undefined {
-		if (property !== '__unsafeInternalStore' && Reflect.has(target.__unsafeInternalStore, property)) {
+		if (STORAGE_AREA.get(target)!.has(property)) {
 			return {
 				configurable: true,
 				enumerable: true,
-				value: target.getItem(property),
+				value: STORAGE_AREA.get(target)!.get(property),
 				writable: true,
 			};
 		} else {

@@ -53,7 +53,6 @@ const storage = new Storage();
 
  ## Implementation notes
 
-- The property `__unsafeInternalStore` on __Storage__ instances is reserved. Manipulate this key outside of using the [Storage Interface][storage-interface] will result in errors.
 - This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
 - Storage instances do not have a quote limit and will not throw `QuotaExceededError` exceptions.
 - The `configurable`, `enumerable`, `writeable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.

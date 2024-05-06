@@ -5,7 +5,7 @@
  */
 import { Storage, ProxiedStorage, createStorage } from './Storage';
 
-const Conversion: Array<Array<any>> = [
+const CONVERSIONS: Array<Array<any>> = [
 	['"test"', 'test', 'test'],
 	['123', 123, '123'],
 	['123.059', 123.059, '123.059'],
@@ -59,14 +59,14 @@ describe.each([
 			expect(storageObject.getItem('test')).toBe(null);
 		});
 
-		test.each(Conversion)('Converts %s to a string before retrieving', (_message, key) => {
+		test.each(CONVERSIONS)('Converts key %s to a string before retrieving', (_message, key) => {
 			storageObject.setItem(key, 'test');
 			expect(storageObject.getItem(key)).toBe('test');
 		});
 	});
 
 	describe('.setItem()', () => {
-		test.each(Conversion)('Converts %s to a string before setting', (_message, input, expected) => {
+		test.each(CONVERSIONS)('Converts value %s to a string before setting', (_message, input, expected) => {
 			storageObject.setItem('test', input);
 
 			if (expected instanceof RegExp) {
