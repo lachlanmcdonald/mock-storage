@@ -1,4 +1,4 @@
-# @lachlanmcdonald/mock-storage
+# @lmcd/mock-storage
 
 [![Build](https://github.com/lachlanmcdonald/mock-storage/actions/workflows/build.yml/badge.svg?branch=main)][build-link] [![npm version](https://badge.fury.io/js/%40lachlanmcdonald%2Fmock-storage.svg)][package-link] [![License](https://img.shields.io/badge/License-MIT-blue.svg)][license-link] 
 
@@ -11,14 +11,16 @@ __mock-storage__ intends to be side-effect compatible with browser environments,
  There are two distinct ways to utilise this module:
 
  ```ts
-const { createStorage } = require('@lachlanmcdonald/mock-storage');
+const { createStorage } = require('@lmcd/mock-storage');
 const storage = createStorage();
  ```
  
  ```ts
-const { Storage } = require('@lachlanmcdonald/mock-storage');
+const { Storage } = require('@lmcd/mock-storage');
 const storage = new Storage();
  ```
+
+__@lmcd/mock-storage__ replaces __@lachlanmcdonald/mock-storage__.
 
 ### createStorage()
 
@@ -67,7 +69,7 @@ npm test
 ```
 
 [build-link]: https://github.com/lachlanmcdonald/mock-storage/actions
-[package-link]: https://www.npmjs.com/package/@lachlanmcdonald/mock-storage
+[package-link]: https://www.npmjs.com/package/@lmcd/mock-storage
 [license-link]: https://github.com/lachlanmcdonald/mock-storage/blob/main/LICENSE
 [storage-interface]: https://developer.mozilla.org/en-US/docs/Web/API/Storage
 [web-storage-api]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API
