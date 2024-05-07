@@ -11,12 +11,12 @@ __mock-storage__ intends to be side-effect compatible with browser environments,
  There are two distinct ways to utilise this module:
 
  ```ts
-const { createStorage } = require('@lmcd/mock-storage');
+import { createStorage } from "@lmcd/mock-storage";
 const storage = createStorage();
  ```
  
  ```ts
-const { Storage } = require('@lmcd/mock-storage');
+import { Storage } from "@lmcd/mock-storage";
 const storage = new Storage();
  ```
 
