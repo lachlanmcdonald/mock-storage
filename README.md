@@ -1,6 +1,6 @@
 # @lmcd/mock-storage
 
-[![Build](https://github.com/lachlanmcdonald/mock-storage/actions/workflows/build.yml/badge.svg?branch=main)][build-link] [![npm version](https://badge.fury.io/js/%40lachlanmcdonald%2Fmock-storage.svg)][package-link] [![License](https://img.shields.io/badge/License-MIT-blue.svg)][license-link] 
+[![Build](https://github.com/lachlanmcdonald/mock-storage/actions/workflows/build.yml/badge.svg?branch=main)][build-link] [![npm version](https://badge.fury.io/js/%40lmcd%2Fmock-storage.svg)][package-link] [![License](https://img.shields.io/badge/License-MIT-blue.svg)][license-link] 
 
 __mock-storage__ is a implementation of [Web Storage API][web-storage-api] (e.g. [localStorage]), primarily intended for use in development/testing in non-browser environments where the API is not available.
 
@@ -11,12 +11,12 @@ __mock-storage__ intends to be side-effect compatible with browser environments,
  There are two distinct ways to utilise this module:
 
  ```ts
-const { createStorage } = require('@lmcd/mock-storage');
+import { createStorage } from "@lmcd/mock-storage";
 const storage = createStorage();
  ```
  
  ```ts
-const { Storage } = require('@lmcd/mock-storage');
+import { Storage } from "@lmcd/mock-storage";
 const storage = new Storage();
  ```
 
