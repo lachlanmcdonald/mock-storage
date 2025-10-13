@@ -29,15 +29,15 @@
 	"license": "MIT",
 	"description": "An implementation of the Web Storage API intended for use in development/testing in non-browser environments.",
 	"devDependencies": {
-		"@lmcd/eslint-config": "^0.7.0",
-		"@stylistic/eslint-plugin": "^5.2.3",
+		"@lmcd/eslint-config": "^0.8.0",
+		"@stylistic/eslint-plugin": "^5.4.0",
 		"@types/jest": "^30.0.0",
-		"@typescript-eslint/eslint-plugin": "^8.40.0",
-		"@typescript-eslint/parser": "^8.40.0",
-		"eslint": "^9.33.0",
+		"@typescript-eslint/eslint-plugin": "^8.46.0",
+		"@typescript-eslint/parser": "^8.46.0",
+		"eslint": "^9.37.0",
 		"eslint-plugin-jest": "^29.0.1",
-		"jest": "^30.0.5",
-		"typescript": "^5.9.2"
+		"jest": "^30.2.0",
+		"typescript": "^5.9.3"
 	},
 	"keywords": [
 		"WebStorage",
