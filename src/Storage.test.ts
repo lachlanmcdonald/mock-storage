@@ -13,7 +13,8 @@ const CONVERSIONS: Array<Array<unknown>> = [
 	['false', false, 'false'],
 	['null', null, 'null'],
 	['undefined', undefined, 'undefined'], // eslint-disable-line no-undefined
-	['an object', {}, '[object Object]'],
+	['an empty object', {}, '[object Object]'],
+	['an object', { a: 123 }, '[object Object]'],
 	['an empty array', [], ''],
 	['an array', [1, 2, 3], '1,2,3'],
 	['a function', () => { /* empty */ }, /^\s*\(\)\s*=>\s*\{\s*\}\s*$/u],
@@ -74,6 +75,14 @@ describe.each([
 			} else {
 				expect(storageObject.getItem('test')).toBe(expected);
 			}
+		});
+
+		test('An object with a toString property throws a TypeError', () => {
+			expect(() => {
+				storageObject.setItem('test', {
+					toString: 'test',
+				});
+			}).toThrow(TypeError);
 		});
 	});
 
@@ -169,7 +178,7 @@ describe('createStorage()', () => {
 			expect(storageObject.getItem(name)).toBe('123');
 		});
 
-		test('Non-existant key returns null using property accessor', () => {
+		test('Non-existent key returns null using property accessor', () => {
 			const storageObject = createStorage();
 
 			expect(storageObject.test).toBe(null);
