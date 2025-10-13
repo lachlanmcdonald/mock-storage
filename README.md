@@ -56,11 +56,12 @@ __@lmcd/mock-storage__ replaces __@lachlanmcdonald/mock-storage__.
  ## Implementation notes
 
 1. A storage area should allow `{ [key: unknown] : unknown }` for writes and `{ [key: unknown] : string }` for reads, but TypeScript does not allow different types for setting properties and getting properties. As such, the following code is allowed but TypeScript will display an error: `localStorage[123] = 456`
-2. This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
-3. Storage instances do not have a quote limit and will not throw `QuotaExceededError` exceptions.
-4. The `configurable`, `enumerable`, `writeable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.
-5. As there is no trap for `Object.freeze()`, calling `Object.freeze()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot freeze"_.
-6. As there is no trap for `Object.seal()`, calling `Object.seal()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot seal"_.
+2. The order of keys or values returned by `.key()`, `Object.keys()`, `Object.values()` and `Object.entries()` is implementation dependant and not guaranteed.
+3. This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
+4. Storage instances do not have a quote limit and will not throw `QuotaExceededError` exceptions.
+5. The `configurable`, `enumerable`, `writeable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.
+6. As there is no trap for `Object.freeze()`, calling `Object.freeze()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot freeze"_.
+7. As there is no trap for `Object.seal()`, calling `Object.seal()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot seal"_.
 
 ## Tests
 
