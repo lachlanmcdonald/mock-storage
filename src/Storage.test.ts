@@ -5,7 +5,7 @@
  */
 import { ProxiedStorage, Storage, createStorage } from './Storage';
 
-const CONVERSIONS: Array<Array<any>> = [
+const CONVERSIONS: Array<Array<unknown>> = [
 	['"test"', 'test', 'test'],
 	['123', 123, '123'],
 	['123.059', 123.059, '123.059'],
@@ -280,8 +280,8 @@ describe('createStorage()', () => {
 			const entries = Object.entries(storageObject);
 
 			expect(entries).toHaveLength(2);
-			expect(entries[0]).toMatchObject(['a', '123'] as [string, any]);
-			expect(entries[1]).toMatchObject(['b', '456'] as [string, any]);
+			expect(entries[0]).toMatchObject(['a', '123'] as [string, string]);
+			expect(entries[1]).toMatchObject(['b', '456'] as [string, string]);
 		});
 	});
 
