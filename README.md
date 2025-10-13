@@ -32,7 +32,7 @@ __@lmcd/mock-storage__ replaces __@lachlanmcdonald/mock-storage__.
 | `Object.entries()` | Returns an array of key/value pairs set on the instance | 
 | `Object.values()` | Returns an array of values set on the instance | 
 | `instance[key]` | Behaves the same as `getItem()` except for existing methods or properties | 
-| `instance[key] = value` | Behaves the same as `setItem()` | 
+| `instance[key] = value` | Behaves the same as `setItem()` (see _Note 1_)  |  
 | `delete instance[key]` | Behaves the same as `removeItem()` | 
 | `Object.defineProperty()` <br> `Object.defineProperties()` | Behaves the same as `setItem()` | 
 | `{...instance}` | Outputs an object of key/value pairs set on the instance | 
@@ -46,20 +46,21 @@ __@lmcd/mock-storage__ replaces __@lachlanmcdonald/mock-storage__.
 
 `new Storage()` initialises a new __Storage__ object that is not proxied. As such, this instance only implements the [Storage Interface][storage-interface]:
 
-- `Storage.key()`
-- `Storage.getItem()`
-- `Storage.setItem()`
-- `Storage.removeItem()`
-- `Storage.clear()`
-- `Storage.length`
+- `.key()`
+- `.getItem()`
+- `.setItem()`
+- `.removeItem()`
+- `.clear()`
+- `.length`
 
  ## Implementation notes
 
-- This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
-- Storage instances do not have a quote limit and will not throw `QuotaExceededError` exceptions.
-- The `configurable`, `enumerable`, `writeable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.
-- As there is no trap for `Object.freeze()`, calling `Object.freeze()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot freeze"_.
-- As there is no trap for `Object.seal()`, calling `Object.seal()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot seal"_.
+1. A storage area should allow `{ [key: unknown] : unknown }` for writes and `{ [key: unknown] : string }` for reads, but TypeScript does not allow different types for setting properties and getting properties. As such, the following code is allowed but TypeScript will display an error: `localStorage[123] = 456`
+2. This implementation is intended for non-browser environments, and as such, does not fire `storage` events or throw `SecurityError` exceptions. This module is not intended as a browser polyfill.
+3. Storage instances do not have a quote limit and will not throw `QuotaExceededError` exceptions.
+4. The `configurable`, `enumerable`, `writeable` properties are ignored when calling `defineProperty()` on a proxied Storage object. This appears to match browser implementations of this behaviour.
+5. As there is no trap for `Object.freeze()`, calling `Object.freeze()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot freeze"_.
+6. As there is no trap for `Object.seal()`, calling `Object.seal()` will throw the [TypeError] _"Cannot prevent extensions"_, instead of the expected _"Cannot seal"_.
 
 ## Tests
 
