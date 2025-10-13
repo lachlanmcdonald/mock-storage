@@ -3,7 +3,7 @@
  * This file is licensed under the MIT License
  * https://github.com/lachlanmcdonald/mock-storage
  */
-import { Storage, ProxiedStorage, createStorage } from './Storage';
+import { ProxiedStorage, Storage, createStorage } from './Storage';
 
 const CONVERSIONS: Array<Array<any>> = [
 	['"test"', 'test', 'test'],
