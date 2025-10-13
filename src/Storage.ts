@@ -3,8 +3,7 @@
  * This file is licensed under the MIT License
  * https://github.com/lachlanmcdonald/mock-storage
  */
-
-const STORAGE_AREA = new WeakMap<any, Map<string, string>>();
+const STORAGE_AREAS = new WeakMap<object, Map<string, string>>();
 
 /**
  * A mock of the Web Storage API's [Storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage) class,
@@ -18,30 +17,30 @@ export class Storage {
 	 * be used instead when initialising new instances of Storage to ensure the internals are properly proxied.
 	 */
 	constructor() {
-		this.clear();
+		STORAGE_AREAS.set(this, new Map());
 	}
 
 	/**
 	 * Removes all data stored in the Storage object.
 	 */
 	clear() {
-		STORAGE_AREA.set(this, new Map());
+		STORAGE_AREAS.get(this)!.clear();
 	}
 
 	/**
 	 * Retrieves the value for provided `key` from the Storage object, or `null` if the key does not exist.
 	 */
-	getItem(key: any) {
+	getItem(key: unknown) {
 		if (arguments.length === 0) {
 			throw new TypeError("Failed to execute 'getItem' on 'Storage': 1 argument required, but only 0 present.");
 		}
 
-		key = String(key);
+		const area = STORAGE_AREAS.get(this);
 
-		const area = STORAGE_AREA.get(this);
+		if (area!.has(String(key))) {
+			const value = area!.get(String(key));
 
-		if (area!.has(key)) {
-			return area!.get(key);
+			return typeof value === 'undefined' ? null : value;
 		} else {
 			return null;
 		}
@@ -50,48 +49,52 @@ export class Storage {
 	/**
 	 * Sets the provided `key` to the provided `value` in the Storage object. Existing values are replaced.
 	 *
-	 * __Implementation notes:__
-	 * - This implementation does not enforce storage limits, and as such, will not
-	 *   throw an exception for exceeding the storage limit.
+	 * - This implementation does not enforce storage limits, and as such, will not throw an exception for
+	 *   exceeding the storage limit.
 	 */
-	setItem(key: any, value: any) {
+	setItem(key: unknown, value: unknown) {
 		if (arguments.length < 2) {
 			throw new TypeError("Failed to execute 'setItem' on 'Storage': 2 arguments required, but only 1 present.");
 		}
 
-		STORAGE_AREA.get(this)!.set(String(key), String(value));
+		STORAGE_AREAS.get(this)!.set(String(key), String(value));
 	}
 
 	/**
 	 * Removes the provided `key` from the Storage object, if it exists.
 	 */
-	removeItem(key: any) {
+	removeItem(key: unknown) {
 		if (arguments.length === 0) {
 			throw new TypeError("Failed to execute 'removeItem' on 'Storage': 1 argument required, but only 0 present.");
 		}
 
-		STORAGE_AREA.get(this)!.delete(key);
+		STORAGE_AREAS.get(this)!.delete(String(key));
 	}
 
 	/**
 	 * Returns the name of the nth key in the Storage object.
 	 *
-	 * - The order of keys is varies by user-agent and should be not relied upon.
+	 * - The order of keys is implementation-dependant and should be not relied upon.
+	 * - Non-finite keys are allowed but are implementation-dependant and should be not relied upon.
 	 */
-	key(index: any) {
+	key(index: unknown) {
 		if (arguments.length === 0) {
 			throw new TypeError("Failed to execute 'key' on 'Storage': 1 argument required, but only 0 present.");
 		}
 
-		const keys = Array.from(STORAGE_AREA.get(this)!.keys());
-		return keys[index] ? STORAGE_AREA.get(this)!.get(keys[index]) : null;
+		if (Number.isFinite(index)) {
+			const keys = Array.from(STORAGE_AREAS.get(this)!.keys());
+			return keys[index as number] ? STORAGE_AREAS.get(this)!.get(keys[index as number]) : null;
+		} else {
+			return null;
+		}
 	}
 
 	/**
 	 * Returns the number of items stored in the Storage object
 	 */
 	get length() {
-		return STORAGE_AREA.get(this)!.size;
+		return STORAGE_AREAS.get(this)!.size;
 	}
 
 	toString() {
@@ -105,16 +108,18 @@ export class Storage {
  */
 export const storageProxyHandler: ProxyHandler<Storage> = {
 	ownKeys(target: Storage) {
-		return Array.from(STORAGE_AREA.get(target)!.keys());
+		return Array.from(STORAGE_AREAS.get(target)!.keys());
 	},
-	get(target: Storage, property: any) {
-		if (Reflect.has(target, property)) {
-			const value: any = Reflect.get(target, property, target);
+	get(target: Storage, property: unknown) {
+		const isPropertyKey = Number.isFinite(property) || typeof property === 'string' || property instanceof Symbol;
+
+		if (isPropertyKey && (property as PropertyKey) in target) {
+			const value: unknown = Reflect.get(target, property as PropertyKey, target);
 
 			if (typeof value === 'function') {
 				return function () {
 					// @ts-expect-error Intentional function reflection
-					return value.apply(this, arguments); // eslint-disable-line prefer-rest-params
+				return value.apply(this, arguments); // eslint-disable-line prefer-rest-params
 				}.bind(target);
 			} else {
 				return value;
@@ -123,11 +128,11 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 			return target.getItem(property);
 		}
 	},
-	set(target: Storage, property: any, value: any) {
+	set(target: Storage, property: unknown, value: unknown) {
 		try {
 			target.setItem(property, value);
 			return true;
-		} catch (e) {
+		} catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
 			return false;
 		}
 	},
@@ -138,23 +143,25 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 		target.setItem(property, descriptor.value);
 		return true;
 	},
-	has(target: Storage, property: any) {
-		if (Reflect.has(target, property)) {
+	has(target: Storage, property: unknown) {
+		const isPropertyKey = Number.isFinite(property) || typeof property === 'string' || property instanceof Symbol;
+
+		if (isPropertyKey && (property as PropertyKey) in target) {
 			return true;
 		} else {
 			return typeof target.getItem(property) === 'string';
 		}
 	},
-	deleteProperty(target: Storage, property: any) {
+	deleteProperty(target: Storage, property: unknown) {
 		target.removeItem(property);
 		return true;
 	},
-	getOwnPropertyDescriptor(target: Storage, property: any): PropertyDescriptor | undefined {
-		if (STORAGE_AREA.get(target)!.has(property)) {
+	getOwnPropertyDescriptor(target: Storage, property: unknown): PropertyDescriptor | undefined {
+		if (typeof property === 'string' && STORAGE_AREAS.get(target)!.has(property)) {
 			return {
 				configurable: true,
 				enumerable: true,
-				value: STORAGE_AREA.get(target)!.get(property),
+				value: STORAGE_AREAS.get(target)!.get(property),
 				writable: true,
 			};
 		} else {
@@ -175,8 +182,12 @@ export const storageProxyHandler: ProxyHandler<Storage> = {
 	},
 };
 
-export type ProxiedStorage = Storage & Record<any, any>;
+export type ProxiedStorage = Storage & {
+  [key: string]: string | null;
+  [key: number]: string | null;
+  [key: symbol]: string | null;
+};
 
 export const createStorage = () => {
-	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage; // eslint-disable-line no-undef
+	return new Proxy(new Storage(), storageProxyHandler) as ProxiedStorage;
 };

@@ -144,6 +144,7 @@ describe('createStorage()', () => {
 		test('Set value using property accessor', () => {
 			const storageObject = createStorage();
 
+			// @ts-expect-error Intentional type mismatch
 			storageObject.test = 123;
 			expect(storageObject.test).toBe('123');
 		});
@@ -172,6 +173,7 @@ describe('createStorage()', () => {
 
 			const k = typeof storageObject[name];
 
+			// @ts-expect-error Intentional type mismatch
 			storageObject[name] = 123;
 
 			expect(typeof storageObject[name]).toBe(k);
@@ -189,6 +191,7 @@ describe('createStorage()', () => {
 
 			expect(storageObject.test).toBe(null);
 
+			// @ts-expect-error Intentional type mismatch
 			storageObject.test = 123;
 			expect(storageObject.test).toBe('123');
 
@@ -206,6 +209,7 @@ describe('createStorage()', () => {
 
 		expect(storageObject.length).toBe(0);
 
+		// @ts-expect-error Intentional type mismatch
 		storageObject.a = 123;
 		storageObject.setItem('b', 456);
 	});
