@@ -109,6 +109,12 @@ describe.each([
 			expect(storageObject.length).toBe(0);
 		});
 	});
+
+	describe('.valueOf()', () => {
+		test('Returns a Storage object', () => {
+			expect(storageObject.valueOf()).toBeInstanceOf(Storage);
+		});
+	});
 });
 
 describe('createStorage()', () => {
@@ -202,6 +208,70 @@ describe('createStorage()', () => {
 			expect(keys).toHaveLength(2);
 			expect(keys).toContainEqual('a');
 			expect(keys).toContainEqual('b');
+		});
+	});
+
+	describe('Object.getOwnPropertyNames()', () => {
+		test('Object.getOwnPropertyNames() returns all set keys.', () => {
+			const keys = Object.getOwnPropertyNames(storageObject);
+
+			expect(keys).toHaveLength(2);
+			expect(keys).toContainEqual('a');
+			expect(keys).toContainEqual('b');
+		});
+	});
+
+	describe('Object.getOwnPropertyDescriptor()', () => {
+		test('Object.getOwnPropertyDescriptor() returns a description for existing keys.', () => {
+			const result1 = Object.getOwnPropertyDescriptor(storageObject, 'a');
+
+			expect(result1).toMatchObject({
+				value: '123',
+				configurable: true,
+				enumerable: true,
+				writable: true,
+			});
+
+			const result2 = Object.getOwnPropertyDescriptor(storageObject, 'b');
+
+			expect(result2).toMatchObject({
+				value: '456',
+				configurable: true,
+				enumerable: true,
+				writable: true,
+			});
+		});
+
+		test('Object.getOwnPropertyDescriptor() returns a undefined for non-existent key.', () => {
+			const result1 = Object.getOwnPropertyDescriptor(storageObject, 'c');
+
+			expect(result1).toBeUndefined();
+		});
+	});
+
+	describe('Object.getOwnPropertyDescriptor()', () => {
+		test('Object.getOwnPropertyDescriptor() returns a descriptor.', () => {
+			const result = Object.getOwnPropertyDescriptors(storageObject);
+
+			expect(Object.keys(result)).toMatchObject(['a', 'b']);
+			expect(result.a).toMatchObject({
+				value: '123',
+				configurable: true,
+				enumerable: true,
+				writable: true,
+			});
+			expect(result.b).toMatchObject({
+				value: '456',
+				configurable: true,
+				enumerable: true,
+				writable: true,
+			});
+		});
+
+		test('Object.getOwnPropertyDescriptor() returns a undefined for non-existent key.', () => {
+			const result1 = Object.getOwnPropertyDescriptor(storageObject, 'c');
+
+			expect(result1).toBeUndefined();
 		});
 	});
 
